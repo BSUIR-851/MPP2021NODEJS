@@ -2,6 +2,11 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const taskSchema = new Schema({
+	user: {
+		ref: 'users',
+		type: Schema.Types.ObjectId,
+	},
+
 	description: {
 		type: String,
 		required: true,
@@ -15,20 +20,4 @@ const taskSchema = new Schema({
 	},
 });
 
-const waitingTaskSchema = new Schema({
-	task: {
-		type: taskSchema,
-		required: true,
-	},
-});
-
-const completedTaskSchema = new Schema({
-	task: {
-		type: taskSchema,
-		required: true,
-	},
-});
-
-module.exports.Task = mongoose.model('tasks', taskSchema);
-module.exports.WaitingTask = mongoose.model('waitingTasks', waitingTaskSchema);
-module.exports.CompletedTask = mongoose.model('completedTasks', completedTaskSchema);
+module.exports = mongoose.model('tasks', taskSchema);
