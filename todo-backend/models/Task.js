@@ -15,34 +15,14 @@ const taskSchema = new Schema({
 	},
 });
 
-const taskSchema = new Schema({
-	description: {
-		type: String,
-		required: true,
-	},
-	date: {
-		type: Date,
-		required: true,
-	},
-	files: {
-		type: Array,
-	},
+const waitingTaskSchema = new Schema({
+	task: taskSchema,
 });
 
-const taskSchema = new Schema({
-	description: {
-		type: String,
-		required: true,
-	},
-	date: {
-		type: Date,
-		required: true,
-	},
-	files: {
-		type: Array,
-	},
+const completedTaskSchema = new Schema({
+	task: taskSchema,
 });
 
 module.exports.Task = mongoose.model('tasks', taskSchema);
-module.exports.WaitingTask = mongoose.model('waiting_tasks', taskSchema);
-module.exports.CompletedTask = mongoose.model('completed_tasks', taskSchema);
+module.exports.WaitingTask = mongoose.model('waitingTasks', waitingTaskSchema);
+module.exports.CompletedTask = mongoose.model('completedTasks', completedTaskSchema);
