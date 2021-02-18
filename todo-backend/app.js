@@ -34,6 +34,8 @@ app.use(morgan('dev'));
 app.use(passport.initialize());
 require('./middleware/passport.js')(passport);
 
+app.use('/uploads', express.static('uploads'));
+
 app.use('/api/auth', authRoute);
 app.use('/api/task', taskRoute);
 

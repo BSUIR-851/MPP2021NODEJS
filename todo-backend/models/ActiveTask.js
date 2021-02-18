@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const waitingTaskSchema = new Schema({
+const activeTaskSchema = new Schema({
 	task: {
 		ref: 'tasks',
 		type: Schema.Types.ObjectId,
@@ -9,4 +9,4 @@ const waitingTaskSchema = new Schema({
 	},
 });
 
-module.exports = mongoose.model('waitingTasks', waitingTaskSchema);
+module.exports = mongoose.model('activeTasks', activeTaskSchema);

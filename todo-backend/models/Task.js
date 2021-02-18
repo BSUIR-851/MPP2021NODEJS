@@ -15,8 +15,9 @@ const taskSchema = new Schema({
 		type: Date,
 		required: true,
 	},
-	files: {
-		type: Array,
+	fileSrc: {
+		type: String,
+		default: '',
 	},
 });
 
