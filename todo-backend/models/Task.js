@@ -16,11 +16,17 @@ const taskSchema = new Schema({
 });
 
 const waitingTaskSchema = new Schema({
-	task: taskSchema,
+	task: {
+		type: taskSchema,
+		required: true,
+	},
 });
 
 const completedTaskSchema = new Schema({
-	task: taskSchema,
+	task: {
+		type: taskSchema,
+		required: true,
+	},
 });
 
 module.exports.Task = mongoose.model('tasks', taskSchema);
