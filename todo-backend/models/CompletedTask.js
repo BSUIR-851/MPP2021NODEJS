@@ -6,6 +6,13 @@ const completedTaskSchema = new Schema({
 		ref: 'tasks',
 		type: Schema.Types.ObjectId,
 		required: true,
+		unique : true,
+		dropDups: true,
+	},
+	user: {
+		ref: 'users',
+		type: Schema.Types.ObjectId,
+		required: true,
 	},
 });
 

@@ -5,13 +5,14 @@ const taskSchema = new Schema({
 	user: {
 		ref: 'users',
 		type: Schema.Types.ObjectId,
+		required: true,
 	},
 
 	description: {
 		type: String,
 		required: true,
 	},
-	date: {
+	expireDate: {
 		type: Date,
 		required: true,
 	},
