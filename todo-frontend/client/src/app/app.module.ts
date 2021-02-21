@@ -13,9 +13,9 @@ import { TokenInterceptor } from './shared/classes/token.interceptor';
 import { ActivePageComponent } from './active-page/active-page.component';
 import { OverviewPageComponent } from './overview-page/overview-page.component';
 import { CompletedPageComponent } from './completed-page/completed-page.component';
-import { TaskPageComponent } from './task-page/task-page.component';
 import { TasksPageComponent } from './tasks-page/tasks-page.component';
 import { LoaderComponent } from './shared/components/loader/loader.component';
+import { TasksFormComponent } from './tasks-page/tasks-form/tasks-form.component';
 
 @NgModule({
     declarations: [
@@ -27,9 +27,9 @@ import { LoaderComponent } from './shared/components/loader/loader.component';
         ActivePageComponent,
         OverviewPageComponent,
         CompletedPageComponent,
-        TaskPageComponent,
         TasksPageComponent,
-        LoaderComponent
+        LoaderComponent,
+        TasksFormComponent,
     ],
     imports: [
         BrowserModule,

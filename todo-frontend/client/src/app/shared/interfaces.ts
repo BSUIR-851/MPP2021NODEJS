@@ -7,6 +7,10 @@ export interface Task {
 	user?: string;
 	description: string;
 	expireDate: Date;
-	fileSrc?: string;
+	files: Array<string>;
 	_id?: string;
+}
+
+export interface Message {
+	message: string;
 }

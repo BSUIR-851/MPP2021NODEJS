@@ -1,0 +1,50 @@
+<div class="page-title">
+    <h4>
+        <a routerLink="/tasks">Tasks</a>
+        <i class="material-icons">keyboard_arrow_right</i>
+        {{ isNew ? 'Add' : 'Edit' }} task
+    </h4>
+    <span>
+	    <button class="btn btn-small red" (click)="deleteTask()" *ngIf="!isNew">
+	    	<i class="material-icons">delete</i>
+		</button>
+    </span>
+</div>
+
+<div class="row">
+    <form class="col s12 l6" [formGroup]="form" (ngSubmit)="onSubmit()">
+        <div class="input-field">
+            <input formControlName="description" id="description" type="text" [ngClass]="{'invalid': form.get('description').invalid && form.get('description').touched}" required>
+            <label for="description">Description</label>
+            <span class="helper-text red-text" *ngIf="form.get('description').invalid && form.get('description').touched">
+            	<span *ngIf="form.get('description').errors['required']">Enter description</span>
+            </span>
+        </div>
+        <div class="input-field">
+            <input formControlName="expireDate" id="expireDate" type="date" [ngClass]="{'invalid': form.get('expireDate').invalid && form.get('expireDate').touched}" required>
+            <label for="expireDate">Expire date</label>
+            <span class="helper-text red-text" *ngIf="form.get('expireDate').invalid && form.get('expireDate').touched">
+            	<span *ngIf="form.get('expireDate').errors['required']">Enter expire date</span>
+            </span>
+        </div>
+
+        <div>
+        	<input type="file" class="dn" (change)="onFileUpload($event)" multiple #input>
+            <button (click)="triggerClick()" [disabled]="form.disabled" type="button" class="waves-effect waves-light btn orange lighten-2 mb2">
+                <i class="material-icons left">backup</i>
+                Load files
+            </button>
+        </div>
+
+        <div>
+            <button type="submit" [disabled]="form.invalid || form.disabled" class="waves-effect waves-light btn">
+                Save changes
+            </button>
+        </div>
+    </form>
+    <div class="col s12 l6">
+    	<h4>Files</h4>
+		<a download *ngFor="let file of files" [href]="['/' + file]">{{ file.split('/').pop() }}<br /></a>
+		<a *ngFor="let uploadFile of uploads">{{ uploadFile.name }}<br /></a>
+    </div>
+</div>
