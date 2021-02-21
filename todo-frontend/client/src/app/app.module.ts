@@ -10,6 +10,12 @@ import { AuthLayoutComponent } from './shared/layouts/auth-layout/auth-layout.co
 import { SiteLayoutComponent } from './shared/layouts/site-layout/site-layout.component';
 import { RegisterPageComponent } from './register-page/register-page.component';
 import { TokenInterceptor } from './shared/classes/token.interceptor';
+import { ActivePageComponent } from './active-page/active-page.component';
+import { OverviewPageComponent } from './overview-page/overview-page.component';
+import { CompletedPageComponent } from './completed-page/completed-page.component';
+import { TaskPageComponent } from './task-page/task-page.component';
+import { TasksPageComponent } from './tasks-page/tasks-page.component';
+import { LoaderComponent } from './shared/components/loader/loader.component';
 
 @NgModule({
     declarations: [
@@ -17,7 +23,13 @@ import { TokenInterceptor } from './shared/classes/token.interceptor';
         LoginPageComponent,
         AuthLayoutComponent,
         SiteLayoutComponent,
-        RegisterPageComponent
+        RegisterPageComponent,
+        ActivePageComponent,
+        OverviewPageComponent,
+        CompletedPageComponent,
+        TaskPageComponent,
+        TasksPageComponent,
+        LoaderComponent
     ],
     imports: [
         BrowserModule,

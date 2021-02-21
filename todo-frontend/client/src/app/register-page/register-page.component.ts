@@ -39,7 +39,7 @@ export class RegisterPageComponent implements OnInit, OnDestroy {
 		this.form.disable();
 		this.aSub = this.auth.register(this.form.value).subscribe(
 			() => {
-				this.router.navigate(['/login'], {
+				this.router.navigate(['/'], {
 					queryParams: {
 						registered: true,
 					}
