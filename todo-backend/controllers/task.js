@@ -41,7 +41,9 @@ module.exports.create = async function(req, res) {
 		user: req.user.id,
 		description: req.body.description,
 		expireDate: req.body.expireDate,
-		fileSrc: req.file ? req.file.path : '',
+		files: req.files.map((file) => {
+			return file.path;
+		}),
 	});
 	try {
 		await task.save();
@@ -62,8 +64,10 @@ module.exports.update = async function(req, res) {
 		expireDate: req.body.expireDate,
 	};
 
-	if (req.file) {
-		updated.fileSrc = req.file.path;
+	if (req.files) {
+		updated.files = req.files.map((file) => {
+			return file.path;
+		});
 	}
 
 	try {

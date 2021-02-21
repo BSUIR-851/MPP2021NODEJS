@@ -13,8 +13,8 @@ router.get('/completed', passport.authenticate('jwt', {session: false}), control
 
 router.get('/:id', passport.authenticate('jwt', {session: false}), controller.getById);
 router.delete('/:id', passport.authenticate('jwt', {session: false}), controller.remove);
-router.post('/', passport.authenticate('jwt', {session: false}), upload.single('file'), controller.create);
-router.patch('/:id', passport.authenticate('jwt', {session: false}), upload.single('file'), controller.update);
+router.post('/', passport.authenticate('jwt', {session: false}), upload.any(), controller.create);
+router.patch('/:id', passport.authenticate('jwt', {session: false}), upload.any(), controller.update);
 
 
 module.exports = router;
