@@ -64,7 +64,7 @@ module.exports.update = async function(req, res) {
 		expireDate: req.body.expireDate,
 	};
 
-	if (req.files) {
+	if (req.files.length !== 0) {
 		updated.files = req.files.map((file) => {
 			return file.path;
 		});
