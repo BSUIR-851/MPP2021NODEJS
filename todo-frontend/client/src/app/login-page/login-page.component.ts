@@ -33,6 +33,8 @@ export class LoginPageComponent implements OnInit, OnDestroy {
 				MaterialService.toast('You have been registered and you can login');
 			} else if (params['accessDenied']) {
 				MaterialService.toast('You have to login');
+			} else if (params['sessionFailed']) {
+				MaterialService.toast('Please, login to system again');
 			}
 		});
 	}
