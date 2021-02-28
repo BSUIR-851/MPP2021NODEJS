@@ -4,24 +4,33 @@
 </div>
 
 <div class="row" *ngIf="activeTasks$ | async as activeTasks; else loader">
-	<form *ngIf="activeTasks.length !== 0; else empty" class="col s12" [formGroup]="form" (ngSubmit)="onSubmit()">
-        <div class="collection s12">
-        	<div *ngFor="let activeTask of activeTasks">
-        		<label class="col s1 m1 l1 pt8">
-	        		<input formControlName="choosedTask" type="radio" class="with-gap" value="{{ activeTask._id }}">
-	        		<span></span>
-	        	</label>
-        		<a [routerLink]="['/tasks', activeTask._id]" class="collection-item">
-        			{{ activeTask.description }} | {{ activeTask.expireDate }}
-        		</a>
-        	</div>
-        </div>
-        <div>
-            <button type="submit" class="waves-effect waves-light btn">
-                Complete task
-            </button>
-    	</div>
-	</form>
+    <table class="highlight" *ngIf="activeTasks.length !== 0; else empty">
+        <thead>
+            <tr>
+                <th>Description</th>
+                <th>Expire date</th>
+                <th>Amount of files</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr *ngFor="let activeTask of activeTasks">
+                <td>{{ activeTask.description }}</td>
+                <td>{{ activeTask.expireDate }}</td>
+                <td>{{ activeTask.files.length }}</td>
+                <td>
+                    <button type="button" class="btn waves-effect wavers-light btn-small" [routerLink]="['/tasks', activeTask._id]">View</button>
+                </td>
+                <td>
+                    <button (click)="onClick($event, activeTask._id)" class="btn waves-effect wavers-light btn-small">Complete</button>
+                </td>
+            </tr>
+            
+        </tbody>
+    </table>
+
 	<ng-template #empty>
     	<div class="center">You don't have any active tasks!</div>
     </ng-template>

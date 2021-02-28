@@ -4,16 +4,32 @@
 </div>
 
 <div class="row" *ngIf="tasks$ | async as tasks; else loader">
-    <div class="col s12">
-        <div class="collection" *ngIf="tasks.length !== 0; else empty">
-            <a *ngFor="let task of tasks" [routerLink]="['/tasks', task._id]" class="collection-item">
-                {{ task.description }}
-            </a>
-        </div>
-        <ng-template #empty>
-        	<div class="center">You don't have any tasks!</div>
-        </ng-template>
-    </div>
+    <table class="highlight" *ngIf="tasks.length !== 0; else empty">
+        <thead>
+            <tr>
+                <th>Description</th>
+                <th>Expire date</th>
+                <th>Amount of files</th>
+                <th></th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr *ngFor="let task of tasks">
+                <td>{{ task.description }}</td>
+                <td>{{ task.expireDate }}</td>
+                <td>{{ task.files.length }}</td>
+                <td>
+                    <button type="button" class="btn waves-effect wavers-light btn-small" [routerLink]="['/tasks', task._id]">View</button>
+                </td>
+            </tr>
+            
+        </tbody>
+    </table>
+
+    <ng-template #empty>
+        <div class="center">You don't have any active tasks!</div>
+    </ng-template>
 </div>
 
 <ng-template #loader>
