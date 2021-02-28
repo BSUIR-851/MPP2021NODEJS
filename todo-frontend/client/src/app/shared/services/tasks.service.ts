@@ -19,6 +19,14 @@ export class TasksService {
 		return this.http.get<Task>(`/api/task/${id}`);
 	}
 
+	getAllActive(): Observable<Task[]> {
+		return this.http.get<Task[]>('/api/task/active');
+	}
+
+	getAllCompleted(): Observable<Task[]> {
+		return this.http.get<Task[]>('/api/task/completed');
+	}
+
 	create(description: string, expireDate: Date, files: Array<File>): Observable<Task> {
 		const formData = new FormData();
 		formData.append('description', description);
@@ -41,6 +49,10 @@ export class TasksService {
 		}
 
 		return this.http.patch<Task>(`/api/task/${id}`, formData);
+	}
+
+	complete(id: string): Observable<Task> {
+		return this.http.get<Task>(`/api/task/complete/${id}`);
 	}
 
 	delete(id: string): Observable<Message> {

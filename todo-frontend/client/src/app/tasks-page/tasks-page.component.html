@@ -6,7 +6,9 @@
 <div class="row" *ngIf="tasks$ | async as tasks; else loader">
     <div class="col s12">
         <div class="collection" *ngIf="tasks.length !== 0; else empty">
-            <a *ngFor="let task of tasks" [routerLink]="['/tasks', task._id]" class="collection-item">{{ task.description }}</a>
+            <a *ngFor="let task of tasks" [routerLink]="['/tasks', task._id]" class="collection-item">
+                {{ task.description }}
+            </a>
         </div>
         <ng-template #empty>
         	<div class="center">You don't have any tasks!</div>

@@ -22,7 +22,6 @@ export class TasksFormComponent implements OnInit {
 	files: string[] = [];
 	uploads: File[] = [];
 	isNew = true;
-
 	task: Task;
 
 	constructor(private router: Router,
@@ -78,7 +77,7 @@ export class TasksFormComponent implements OnInit {
 	onSubmit() {
 		let obs$;
 		this.form.disable();
-
+		
 		if (this.isNew) {
 			obs$ = this.tasksService.create(this.form.value.description, new Date(this.form.value.expireDate), this.uploads);
 		} else {

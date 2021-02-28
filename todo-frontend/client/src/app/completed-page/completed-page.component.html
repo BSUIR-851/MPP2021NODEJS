@@ -1,1 +1,21 @@
-<p>completed-page works!</p>
+<div class="page-title">
+    <h4>Completed tasks</h4>
+    <button class="waves-effect waves-light btn grey darken-1" routerLink="/tasks/new">Add task</button>
+</div>
+
+<div class="row" *ngIf="completedTasks$ | async as completedTasks; else loader">
+    <div class="col s12">
+    	<div class="collection" *ngIf="completedTasks.length !== 0; else empty">
+    		<a *ngFor="let completedTask of completedTasks" [routerLink]="['/tasks', completedTask._id]" class="collection-item">
+    			{{ completedTask.description }} | {{ completedTask.expireDate }}
+    		</a>
+    	</div>
+		<ng-template #empty>
+	    	<div class="center">You don't have any completed tasks!</div>
+	    </ng-template>
+    </div>
+</div>
+
+<ng-template #loader>
+	<app-loader></app-loader>
+</ng-template>

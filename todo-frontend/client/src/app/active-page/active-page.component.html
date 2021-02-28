@@ -1,1 +1,32 @@
-<p>active-page works!</p>
+<div class="page-title">
+    <h4>Active tasks</h4>
+    <button class="waves-effect waves-light btn grey darken-1" routerLink="/tasks/new">Add task</button>
+</div>
+
+<div class="row" *ngIf="activeTasks$ | async as activeTasks; else loader">
+	<form *ngIf="activeTasks.length !== 0; else empty" class="col s12" [formGroup]="form" (ngSubmit)="onSubmit()">
+        <div class="collection s12">
+        	<div *ngFor="let activeTask of activeTasks">
+        		<label class="col s1 m1 l1 pt8">
+	        		<input formControlName="choosedTask" type="radio" class="with-gap" value="{{ activeTask._id }}">
+	        		<span></span>
+	        	</label>
+        		<a [routerLink]="['/tasks', activeTask._id]" class="collection-item">
+        			{{ activeTask.description }} | {{ activeTask.expireDate }}
+        		</a>
+        	</div>
+        </div>
+        <div>
+            <button type="submit" class="waves-effect waves-light btn">
+                Complete task
+            </button>
+    	</div>
+	</form>
+	<ng-template #empty>
+    	<div class="center">You don't have any active tasks!</div>
+    </ng-template>
+</div>
+
+<ng-template #loader>
+	<app-loader></app-loader>
+</ng-template>
