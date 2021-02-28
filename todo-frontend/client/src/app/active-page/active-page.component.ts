@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 
 import { Observable } from 'rxjs';
 
@@ -17,7 +18,8 @@ export class ActivePageComponent implements OnInit {
 
 	activeTasks$: Observable<Task[]>;
 
-	constructor(private tasksService: TasksService) { }
+	constructor(private router: Router,
+				private tasksService: TasksService) { }
 
 	ngOnInit(): void {
 		this.activeTasks$ = this.tasksService.getAllActive();
@@ -30,9 +32,11 @@ export class ActivePageComponent implements OnInit {
 			obs$.subscribe(
 				(task: Task) => {
 					MaterialService.toast(`Task ${task.description} has been completed successfully`);
+					this.ngOnInit();
 				},
 				error => {
 					MaterialService.toast(error.error.message);
+					this.ngOnInit();
 				}
 			);
 		}
