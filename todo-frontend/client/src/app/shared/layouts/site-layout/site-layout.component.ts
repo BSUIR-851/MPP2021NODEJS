@@ -34,6 +34,10 @@ export class SiteLayoutComponent implements OnInit, AfterViewInit {
 			url: '/tasks',
 			name: 'All tasks',
 		},
+		{
+			url: '/game',
+			name: 'Play game',
+		},
 	];
 
 	constructor(private auth: AuthService,

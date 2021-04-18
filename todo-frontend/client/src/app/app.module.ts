@@ -16,6 +16,7 @@ import { CompletedPageComponent } from './completed-page/completed-page.componen
 import { TasksPageComponent } from './tasks-page/tasks-page.component';
 import { LoaderComponent } from './shared/components/loader/loader.component';
 import { TasksFormComponent } from './tasks-page/tasks-form/tasks-form.component';
+import { GamePageComponent } from './game-page/game-page.component';
 
 @NgModule({
     declarations: [
@@ -30,6 +31,7 @@ import { TasksFormComponent } from './tasks-page/tasks-form/tasks-form.component
         TasksPageComponent,
         LoaderComponent,
         TasksFormComponent,
+        GamePageComponent,
     ],
     imports: [
         BrowserModule,

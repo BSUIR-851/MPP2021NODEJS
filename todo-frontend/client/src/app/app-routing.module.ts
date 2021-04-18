@@ -10,6 +10,8 @@ import { CompletedPageComponent } from './completed-page/completed-page.componen
 import { TasksPageComponent } from './tasks-page/tasks-page.component';
 import { TasksFormComponent } from './tasks-page/tasks-form/tasks-form.component';
 
+import { GamePageComponent } from './game-page/game-page.component';
+
 import { AuthLayoutComponent } from './shared/layouts/auth-layout/auth-layout.component';
 import { SiteLayoutComponent } from './shared/layouts/site-layout/site-layout.component';
 import { AuthGuard } from './shared/classes/auth.guard';
@@ -62,6 +64,10 @@ const routes: Routes = [
 			{
 				path: 'tasks/:id',
 				component: TasksFormComponent
+			},
+			{
+				path: 'game',
+				component: GamePageComponent
 			},
 		],
 	},
