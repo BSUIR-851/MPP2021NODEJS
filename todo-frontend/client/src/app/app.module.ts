@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { WebSocketModule } from './shared/services/websocket/websocket.module';
+import { environment } from '../environments/environment';
 
 import { AppComponent } from './app.component';
 import { LoginPageComponent } from './login-page/login-page.component';
@@ -39,6 +41,9 @@ import { GamePageComponent } from './game-page/game-page.component';
         FormsModule,
         ReactiveFormsModule,
         HttpClientModule,
+        WebSocketModule.config({
+            url: environment.ws
+        })
     ],
     providers: [
         {
