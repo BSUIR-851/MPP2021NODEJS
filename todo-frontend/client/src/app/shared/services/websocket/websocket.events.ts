@@ -1,6 +1,6 @@
 export const WS = {
 	ON: {
-		MESSAGE: 'message',
+		MESSAGES: 'messages',
 	},
 	SEND: {
 		TEXT: 'text',
