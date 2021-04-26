@@ -14,10 +14,14 @@ server.on('request', app);
 wss.on('connection', (socket, req) => {
 	console.log(req.socket.remoteAddress + ': connected');
 	socket.on('message', (msg) => {
-		console.log(req.socket.remoteAddress + ': ' + msg);
+		parsedMsg = JSON.parse(JSON.parse(msg));
+		console.log(req.socket.remoteAddress + ': ' + parsedMsg);
 		wss.clients.forEach((client) => {
 			if (client !== socket && client.readyState === ws.OPEN) {
-				client.send(msg);
+				client.send(JSON.stringify({
+					event: parsedMsg.event,
+					data: parsedMsg.data
+				}));
 			}
 		});
 	});
