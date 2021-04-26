@@ -25,9 +25,9 @@ export interface IMessageGameData {
 })
 export class SnakeGameComponent implements OnInit {
 
-	form: FormGroup;
+	public form: FormGroup;
 	@Input() public messagesGameData: IMessageGameData[];
-  @Input() EVENTS: object;
+  @Input() public EVENTS: object;
 
 	private interval: number;
 	private tempDirection: number;
