@@ -1,0 +1,24 @@
+<div class="col s12 l6 game-container">
+	<div class="game-header">
+	    <h3 class="logo">Snake</h3>
+	    <div class="score-block">
+			<h3 class="score">Score: {{ score }}</h3>
+	    </div>
+  	</div>
+  	<div class="row center" *ngFor="let column of board; let i = index;">
+    	<div class="column" [ngStyle]="{'background-color': setColors(i, j)}" *ngFor="let row of column; let j = index"></div>
+  	</div>
+
+  	<form class="col s12 l6 center start-form" [formGroup]="form" (ngSubmit)="showMenu()">
+  		<div class="new-game-menu" *ngIf="showMenuChecker">
+	    	<span class="new-game-menu-label">Select Mode</span>
+	    	<div class="start-button new-game-button" (click)="newGame(mode)" *ngFor="let mode of getKeys(allModes)">{{ allModes[mode] }}</div>
+	  	</div>
+        <div>
+            <button type="submit" class="waves-effect waves-light btn" [ngClass]="{'disable-clicks': gameStarted}">
+                Start snake
+            </button>
+        </div>
+	</form>
+  
+</div>
