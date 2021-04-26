@@ -1,1 +1,13 @@
-<p>game-page works!</p>
+<div class="page-title">
+    <h4>
+        <a routerLink="/game">Game</a>
+    </h4>
+</div>
+
+<div class="col">
+	<app-snake-game [messagesGameData]="messagesGameData$ | async" [EVENTS]="EVENTS"></app-snake-game>
+</div>
+
+<ng-template #loader>
+	<app-loader></app-loader>
+</ng-template>
