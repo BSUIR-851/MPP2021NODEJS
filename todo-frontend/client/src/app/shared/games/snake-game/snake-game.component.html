@@ -12,10 +12,10 @@
   	<form class="col s12 l6 center start-form" [formGroup]="form" (ngSubmit)="showMenu()">
   		<div class="new-game-menu" *ngIf="showMenuChecker">
 	    	<span class="new-game-menu-label">Select Mode</span>
-	    	<div class="start-button new-game-button" (click)="newGame(mode)" *ngFor="let mode of getKeys(allModes)">{{ allModes[mode] }}</div>
+	    	<div class="start-button new-game-button" (click)="newGameAll(mode)" *ngFor="let mode of getKeys(allModes)">{{ allModes[mode] }}</div>
 	  	</div>
         <div>
-            <button type="submit" class="waves-effect waves-light btn" [ngClass]="{'disable-clicks': gameStarted}">
+            <button type="submit" class="waves-effect waves-light btn" [ngClass]="{'disable-clicks': isGameStart}">
                 Start snake
             </button>
         </div>

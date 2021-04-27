@@ -5,15 +5,12 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 
 import { CONTROLS, COLORS, BOARD_SIZE, GAME_MODES } from './snake-game.constants';
+import { IGameDataMessage, ISnake, IPoint } from './snake-game.interfaces';
 
-export interface IMessageGameData {
-  mode: string;
-  board: Array<boolean>;
-  obstacles: Array<object>;
-  fruit: object;
-  snake: object;
-  score: number;
-}
+import { WebSocketService } from '../../services/websocket/websocket.service';
+import { IWebSocketMessage } from '../../services/websocket/websocket.interfaces';
+import { WS } from './snake-game.events';
+
 
 @Component({
   selector: 'app-snake-game',
@@ -26,8 +23,10 @@ export interface IMessageGameData {
 export class SnakeGameComponent implements OnInit {
 
 	public form: FormGroup;
-	@Input() public messagesGameData: IMessageGameData[];
-  @Input() public EVENTS: object;
+  public gameDataMessage$: Observable<IGameDataMessage>;
+	public keyCodeMessage$: Observable<number>;
+  public startMessage$: Observable<string>;
+  public endMessage$: Observable<string>;
 
 	private interval: number;
 	private tempDirection: number;
@@ -40,9 +39,9 @@ export class SnakeGameComponent implements OnInit {
   public obstacles = [];
   public score = 0;
   public showMenuChecker = false;
-  public gameStarted = false;
+  public isGameStart = false;
 
-  private snake = {
+  private snake: ISnake = {
     direction: CONTROLS.LEFT,
     parts: [
       {
@@ -52,29 +51,148 @@ export class SnakeGameComponent implements OnInit {
     ]
   };
 
-  private fruit = {
+  private fruit: IPoint = {
     x: -1,
     y: -1
   };
   
-  constructor() { }
+  constructor(private wsService: WebSocketService) { }
 
   ngOnInit(): void {
   	this.form = new FormGroup({});
+    this.initObsGameData();
+    this.initObsKeyCode();
+    this.initObsStartGame();
+    this.initObsEndGame();
   	this.setBoard();
   }
 
-  handleKeyboardEvents(e: KeyboardEvent) {
-		if (e.keyCode === CONTROLS.LEFT && this.snake.direction !== CONTROLS.RIGHT) {
-		  this.tempDirection = CONTROLS.LEFT;
-		} else if (e.keyCode === CONTROLS.UP && this.snake.direction !== CONTROLS.DOWN) {
-		  this.tempDirection = CONTROLS.UP;
-		} else if (e.keyCode === CONTROLS.RIGHT && this.snake.direction !== CONTROLS.LEFT) {
-		  this.tempDirection = CONTROLS.RIGHT;
-		} else if (e.keyCode === CONTROLS.DOWN && this.snake.direction !== CONTROLS.UP) {
-		  this.tempDirection = CONTROLS.DOWN;
-		}
+  initObsGameData(): void {
+    this.gameDataMessage$ = this.wsService.on<IGameDataMessage>(WS.ON.GAME_DATA);
+    this.gameDataMessage$.subscribe((message: IGameDataMessage) => { 
+      this.unfetchGameData(message);
+    });
+  }
+
+  initObsKeyCode(): void {
+    this.keyCodeMessage$ = this.wsService.on<number>(WS.ON.KEY);
+    this.keyCodeMessage$.subscribe((message: number) => {
+      this.handleKeyboardEventsWithKeyCode(message);
+    });
+  }
+
+  initObsStartGame(): void {
+    this.startMessage$ = this.wsService.on<string>(WS.ON.START);
+    this.startMessage$.subscribe((message: string) => {
+      this.newGame(message);
+    });
+  }
+
+  initObsEndGame(): void {
+    this.endMessage$ = this.wsService.on<string>(WS.ON.END);
+    this.endMessage$.subscribe((message: string) => {
+      this.gameOver();
+    });
+  }
+
+  sendData(event: string, data: any): void {
+    this.wsService.send(event, data);
+  }
+
+  fetchGameData(): IGameDataMessage {
+    const gameData: IGameDataMessage = {
+      interval: this.interval,
+      tempDirection: this.tempDirection,
+      isGameOver: this.isGameOver,
+
+      board: this.board,
+      obstacles: this.obstacles,
+      score: this.score,
+      showMenuChecker: this.showMenuChecker,
+      isGameStart: this.isGameStart,
+
+      fruit: this.fruit,
+      snake: this.snake,
+    };
+    return gameData;
+  }
+
+  unfetchGameData(gameData: IGameDataMessage): void {
+    this.interval = gameData.interval;
+    this.tempDirection = gameData.tempDirection;
+    this.isGameOver = gameData.isGameOver;
+
+    this.board = gameData.board;
+    this.obstacles = gameData.obstacles;
+    this.score = gameData.score;
+    this.showMenuChecker = gameData.showMenuChecker;
+    this.isGameStart = gameData.isGameStart;
+
+    this.fruit = gameData.fruit;
+    this.snake = gameData.snake;
+  }
+
+  newGameAll(mode: string): void {
+    this.newGame(mode);
+    this.sendData(WS.SEND.START, mode);
+    this.updatePositions();
+  }
+
+  newGame(mode: string): void {
+    this.defaultMode = mode || 'classic';
+    this.showMenuChecker = false;
+    this.isGameStart = true;
+    this.score = 0;
+    this.tempDirection = CONTROLS.LEFT;
+    this.isGameOver = false;
+    this.interval = 150;
+    this.snake = {
+      direction: CONTROLS.LEFT,
+      parts: []
+    };
+
+    for (let i = 0; i < 3; i++) {
+      this.snake.parts.push({ x: 8 + i, y: 8 });
+    }
+
+    if (mode === 'obstacles') {
+      this.obstacles = [];
+      let j = 1;
+      do {
+        this.addObstacles();
+      } while (j++ < 9);
+    }
+
+    this.resetFruit();
+  }
+
+  setBoard(): void {
+    this.board = [];
+
+    for (let i = 0; i < BOARD_SIZE; i++) {
+      this.board[i] = [];
+      for (let j = 0; j < BOARD_SIZE; j++) {
+        this.board[i][j] = false;
+      }
+    }
+  }
+
+  handleKeyboardEvents(e: KeyboardEvent): void {
+    this.handleKeyboardEventsWithKeyCode(e.keyCode);
+    // this.sendData(WS.SEND.KEY, e.keyCode);
 	}
+
+  handleKeyboardEventsWithKeyCode(keyCode: number): void {
+    if (keyCode === CONTROLS.LEFT && this.snake.direction !== CONTROLS.RIGHT) {
+      this.tempDirection = CONTROLS.LEFT;
+    } else if (keyCode === CONTROLS.UP && this.snake.direction !== CONTROLS.DOWN) {
+      this.tempDirection = CONTROLS.UP;
+    } else if (keyCode === CONTROLS.RIGHT && this.snake.direction !== CONTROLS.LEFT) {
+      this.tempDirection = CONTROLS.RIGHT;
+    } else if (keyCode === CONTROLS.DOWN && this.snake.direction !== CONTROLS.UP) {
+      this.tempDirection = CONTROLS.DOWN;
+    }
+  }
 
 	setColors(col: number, row: number): string {
 		if (this.isGameOver) {
@@ -97,18 +215,18 @@ export class SnakeGameComponent implements OnInit {
     let me = this;
 
     if (this.defaultMode === 'classic' && this.boardCollision(newHead)) {
-      return this.gameOver();
+      return this.gameOverAll();
     } else if (this.defaultMode === 'no_walls') {
       this.noWallsTransition(newHead);
     } else if (this.defaultMode === 'obstacles') {
       this.noWallsTransition(newHead);
       if (this.obstacleCollision(newHead)) {
-        return this.gameOver();
+        return this.gameOverAll();
       }
     }
 
     if (this.selfCollision(newHead)) {
-      return this.gameOver();
+      return this.gameOverAll();
     } else if (this.fruitCollision(newHead)) {
       this.eatFruit();
     }
@@ -120,6 +238,7 @@ export class SnakeGameComponent implements OnInit {
     this.board[newHead.y][newHead.x] = true;
 
     this.snake.direction = this.tempDirection;
+    this.sendData(WS.SEND.GAME_DATA, this.fetchGameData());
 
     setTimeout(() => {
       me.updatePositions();
@@ -225,9 +344,22 @@ export class SnakeGameComponent implements OnInit {
     }
   }
 
+  randomNumber(): any {
+    return Math.floor(Math.random() * BOARD_SIZE);
+  }
+
+  showMenu(): void {
+    this.showMenuChecker = !this.showMenuChecker;
+  }
+
+  gameOverAll(): void {
+    this.gameOver();
+    this.sendData(WS.SEND.END, '');
+  }
+
   gameOver(): void {
     this.isGameOver = true;
-    this.gameStarted = false;
+    this.isGameStart = false;
     let me = this;
 
     setTimeout(() => {
@@ -236,53 +368,4 @@ export class SnakeGameComponent implements OnInit {
 
     this.setBoard();
   }
-
-  randomNumber(): any {
-    return Math.floor(Math.random() * BOARD_SIZE);
-  }
-
-  setBoard(): void {
-    this.board = [];
-
-    for (let i = 0; i < BOARD_SIZE; i++) {
-      this.board[i] = [];
-      for (let j = 0; j < BOARD_SIZE; j++) {
-        this.board[i][j] = false;
-      }
-    }
-  }
-
-  showMenu(): void {
-    this.showMenuChecker = !this.showMenuChecker;
-  }
-
-  newGame(mode: string): void {
-    this.defaultMode = mode || 'classic';
-    this.showMenuChecker = false;
-    this.gameStarted = true;
-    this.score = 0;
-    this.tempDirection = CONTROLS.LEFT;
-    this.isGameOver = false;
-    this.interval = 150;
-    this.snake = {
-      direction: CONTROLS.LEFT,
-      parts: []
-    };
-
-    for (let i = 0; i < 3; i++) {
-      this.snake.parts.push({ x: 8 + i, y: 8 });
-    }
-
-    if (mode === 'obstacles') {
-      this.obstacles = [];
-      let j = 1;
-      do {
-        this.addObstacles();
-      } while (j++ < 9);
-    }
-
-    this.resetFruit();
-    this.updatePositions();
-  }
-
 }
