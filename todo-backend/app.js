@@ -13,9 +13,6 @@ const passport = require('passport');
 const authRoute = require('./routes/auth.js');
 const taskRoute = require('./routes/task.js');
 
-const graphqlAuthRoute = require('./routes/graphqlAuth.js');
-const graphqlTaskRoute = require('./routes/graphqlTask.js');
-
 const app = express();
 
 const keys = require('./config/keys.js');
@@ -41,8 +38,5 @@ app.use('/uploads', express.static('uploads'));
 
 app.use('/api/auth', authRoute);
 app.use('/api/task', taskRoute);
-
-app.use('/graphqlAuth', graphqlAuthRoute);
-app.use('/graphqlTask', graphqlTaskRoute)
 
 module.exports = app;
